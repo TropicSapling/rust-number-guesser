@@ -37,6 +37,7 @@ fn main() {
     }
     
     let mut best = 4294967295;
+    let mut best_of_the_best = 0;
     for _ in 0..256 {
         let mut closest = 4294967295;
         let mut best_ai = 0;
@@ -66,10 +67,6 @@ fn main() {
         }
         
         println!("Output: {}", closest);
-        
-        if best == 0 {
-            break;
-        }
         
         let mut i = 0;
         while i < ai.len() {
@@ -103,7 +100,10 @@ fn main() {
             
             i += 1;
         }
+        
+        best_of_the_best = best_ai;
     }
     
     println!("\nFinal Output: {}", best);
+    println!("\n{:#?}", &ai[best_of_the_best][..]);
 }
