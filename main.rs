@@ -67,6 +67,10 @@ fn main() {
         
         println!("Output: {}", closest);
         
+        if best == 0 {
+            break;
+        }
+        
         let mut i = 0;
         while i < ai.len() {
             if i != best_ai {
