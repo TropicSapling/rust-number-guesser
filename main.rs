@@ -5,7 +5,8 @@ use rand::{Rng, thread_rng};
 #[derive(Debug, Clone, Copy)]
 struct Node {
     op: Operator,
-    val: i64
+    val: i64,
+    mut_rate: f32
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -18,7 +19,7 @@ enum Operator {
 
 fn main() {
     let mut rng = thread_rng();
-    let mut ai = [[Node {op: Operator::Add, val: 0}; 64]; 64];
+    let mut ai = [[Node {op: Operator::Add, val: 0, mut_rate: 0.5}; 64]; 64];
     for nodes in ai.iter_mut() {
         for node in nodes.iter_mut() {
             let random: f32 = rng.gen();
@@ -33,6 +34,7 @@ fn main() {
             };
             
             node.val = rng.gen_range(-8, 8);
+            node.mut_rate = rng.gen();
         }
     }
     
@@ -73,12 +75,13 @@ fn main() {
             if i != best_ai {
                 let mut j = 0;
                 while j < ai[i].len() {
-                    if rng.gen() {
+                    if rng.gen::<f32>() < ai[i][j].mut_rate {
                         let best = ai[best_ai];
                         let random = rng.gen_range(0, best.len());
                         
                         ai[i][j].op = best[random].op;
                         ai[i][j].val = best[random].val;
+                        ai[i][j].mut_rate = best[random].mut_rate;
                     } else {
                         let random: f32 = rng.gen();
                         ai[i][j].op = if random < 0.25 {
@@ -92,6 +95,7 @@ fn main() {
                         };
                         
                         ai[i][j].val = rng.gen_range(-8, 8);
+                        ai[i][j].mut_rate = rng.gen();
                     }
                     
                     j += 1;
