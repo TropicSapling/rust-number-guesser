@@ -72,7 +72,7 @@ fn main() {
         while i < ai.len() {
             if i != best_ai {
                 let mut j = 0;
-                while j < ai.len() {
+                while j < ai[i].len() {
                     if rng.gen() {
                         let best = ai[best_ai];
                         let random = rng.gen_range(0, best.len());
@@ -105,5 +105,30 @@ fn main() {
     }
     
     println!("\nFinal Output: {}", best);
-    println!("\n{:#?}", &ai[best_of_the_best][..]);
+    
+    let mut res: i64 = rng.gen_range(-64, 64);
+    for node in ai[best_of_the_best].iter() {
+        match node.op {
+            Operator::Add => {
+                print!("{} + {} = ", res, node.val);
+                res += node.val;
+                println!("{}", res);
+            },
+            Operator::Sub => {
+                print!("{} - {} = ", res, node.val);
+                res -= node.val;
+                println!("{}", res);
+            },
+            Operator::Mul => {
+                print!("{} * {} = ", res, node.val);
+                res *= node.val;
+                println!("{}", res);
+            },
+            Operator::Div => if node.val != 0 {
+                print!("{} / {} = ", res, node.val);
+                res /= node.val;
+                println!("{}", res);
+            }
+        }
+    }
 }
