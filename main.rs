@@ -37,7 +37,7 @@ fn main() {
     }
     
     let mut best = 4294967295;
-    for _ in 0..16 {
+    for _ in 0..256 {
         let mut closest = 4294967295;
         let mut best_ai = 0;
         
