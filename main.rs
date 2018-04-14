@@ -6,7 +6,8 @@ use rand::{Rng, thread_rng};
 struct Node {
     op: Operator,
     val: i64,
-    mut_rate: f32
+    mut_rate: f32,
+    mut_rate2: f32
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -19,22 +20,25 @@ enum Operator {
 
 fn main() {
     let mut rng = thread_rng();
-    let mut ai = [[Node {op: Operator::Add, val: 0, mut_rate: 0.5}; 64]; 64];
+    let mut ai = std::iter::repeat(vec![]).take(256).collect::<Vec<_>>();
     for nodes in ai.iter_mut() {
-        for node in nodes.iter_mut() {
+        for _ in 0..rng.gen_range(1, 16) {
             let random: f32 = rng.gen();
-            node.op = if random < 0.25 {
-                Operator::Add
-            } else if random < 0.5 {
-                Operator::Sub
-            } else if random < 0.75 {
-                Operator::Mul
-            } else {
-                Operator::Div
-            };
-            
-            node.val = rng.gen_range(-8, 8);
-            node.mut_rate = rng.gen();
+            nodes.push(Node {
+                op: if random < 0.25 {
+                    Operator::Add
+                } else if random < 0.5 {
+                    Operator::Sub
+                } else if random < 0.75 {
+                    Operator::Mul
+                } else {
+                    Operator::Div
+                },
+                
+                val: rng.gen_range(-2048, 2048),
+                mut_rate: rng.gen(),
+                mut_rate2: rng.gen()
+            });
         }
     }
     
@@ -45,7 +49,7 @@ fn main() {
         let mut best_ai = 0;
         
         for (i, nodes) in ai.iter().enumerate() {
-            let mut res: i64 = rng.gen_range(-64, 64);
+            let mut res: i64 = rng.gen_range(-2048, 2048);
             for node in nodes.iter() {
                 match node.op {
                     Operator::Add => res += node.val,
@@ -76,13 +80,11 @@ fn main() {
                 let mut j = 0;
                 while j < ai[i].len() {
                     if rng.gen::<f32>() < ai[i][j].mut_rate {
-                        let best = ai[best_ai];
+                        let best = ai[best_ai].clone();
                         let random = rng.gen_range(0, best.len());
                         
-                        ai[i][j].op = best[random].op;
-                        ai[i][j].val = best[random].val;
-                        ai[i][j].mut_rate = best[random].mut_rate;
-                    } else {
+                        ai[i][j] = best[random];
+                    } else if rng.gen::<f32>() < ai[i][j].mut_rate2 {
                         let random: f32 = rng.gen();
                         ai[i][j].op = if random < 0.25 {
                             Operator::Add
@@ -94,8 +96,9 @@ fn main() {
                             Operator::Div
                         };
                         
-                        ai[i][j].val = rng.gen_range(-8, 8);
+                        ai[i][j].val = rng.gen_range(-2048, 2048);
                         ai[i][j].mut_rate = rng.gen();
+                        ai[i][j].mut_rate2 = rng.gen();
                     }
                     
                     j += 1;
@@ -110,7 +113,7 @@ fn main() {
     
     println!("\nFinal Output: {}", best);
     
-    let mut res: i64 = rng.gen_range(-64, 64);
+    let mut res: i64 = rng.gen_range(-2048, 2048);
     for node in ai[best_of_the_best].iter() {
         match node.op {
             Operator::Add => {
