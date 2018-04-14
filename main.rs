@@ -21,9 +21,9 @@ enum Operator {
 
 fn main() {
     let mut rng = thread_rng();
-    let mut ai = std::iter::repeat(vec![]).take(1024).collect::<Vec<_>>();
+    let mut ai = std::iter::repeat(vec![]).take(256).collect::<Vec<_>>();
     for nodes in ai.iter_mut() {
-        for _ in 0..rng.gen_range(2, 16) {
+        for _ in 0..rng.gen_range(2, 8) {
             let random: f32 = rng.gen();
             nodes.push(Node {
                 op: if random < 0.25 {
@@ -45,7 +45,7 @@ fn main() {
     
     let mut best = None;
     let mut best_of_the_best = 0;
-    for _ in 0..1024 {
+    for _ in 0..256 {
         let mut closest = None;
         let mut best_ai = None;
         
