@@ -6,7 +6,7 @@ function print_js(s, l) {
 	
 	// Create a string from this buffer
 	let str = '';
-	for let i = 0; i < stringBuffer.length; i++) {
+	for(let i = 0; i < stringBuffer.length; i++) {
 		str += String.fromCharCode(stringBuffer[i]);
 	}
 	
