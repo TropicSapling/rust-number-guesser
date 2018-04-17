@@ -36,7 +36,7 @@ fn print(s: String) {
 
 #[no_mangle]
 pub extern fn run() {
-	print(format!("Running..."));
+	print(format!("Running... 0"));
 	
     let mut rng = thread_rng();
     let mut ai = std::iter::repeat(vec![]).take(256).collect::<Vec<_>>();
@@ -60,12 +60,16 @@ pub extern fn run() {
             });
         }
     }
+	
+	print(format!("Running... 1"));
     
     let mut best = None;
     let mut best_of_the_best = 0;
     for _ in 0..256 {
         let mut closest = None;
         let mut best_ai = None;
+		
+		print(format!("Running... 2"));
         
         for (i, nodes) in ai.iter().enumerate() {
             let mut res = Wrapping(rng.gen_range(-2048, 2048));
@@ -79,6 +83,8 @@ pub extern fn run() {
                     }
                 }
             }
+			
+			print(format!("Running... 3"));
             
             let diff = if res > Wrapping(1337) {
                 res - Wrapping(1337)
