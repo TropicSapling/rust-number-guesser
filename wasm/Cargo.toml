@@ -3,8 +3,8 @@ name = "wasm"
 version = "0.1.0"
 authors = ["TropicSapling <tropical.productions.scratch@gmail.com>"]
 
-[dependencies]
-rand = "0.4"
+[dependencies.rand]
+version = "0.3"
 
 [lib]
 crate-type = ["cdylib"]
