@@ -39,10 +39,13 @@ pub extern fn run() {
 	print(format!("Running... 0"));
 	
     let mut rng = thread_rng();
+	print(format!("Running... 0.1"));
     let mut ai = std::iter::repeat(vec![]).take(256).collect::<Vec<_>>();
+	print(format!("Running... 0.2"));
     for nodes in ai.iter_mut() {
         for _ in 0..rng.gen_range(2, 8) {
             let random: f32 = rng.gen();
+			print(format!("Running... 0.3"));
             nodes.push(Node {
                 op: if random < 0.25 {
                     Operator::Add
