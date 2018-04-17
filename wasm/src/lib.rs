@@ -1,10 +1,13 @@
 extern crate rand;
 
 use rand::{Rng, thread_rng};
-use std::num::Wrapping;
 
-use std::ffi::CString;
-use std::os::raw::c_char;
+use std::{
+	num::Wrapping,
+	ffi::CString,
+	os::raw::c_char,
+	panic
+};
 
 #[derive(Debug, Clone, Copy)]
 struct Node {
@@ -38,14 +41,15 @@ fn print(s: String) {
 pub extern fn run() {
 	print(format!("Running... 0"));
 	
-    let mut rng = thread_rng();
-	print(format!("Running... 0.1"));
+	panic::set_hook(Box::new(|info| {
+        print(format!("ERROR: {}", info));
+    }));
+	
+    let mut rng = thread_rng(); // CRASH
     let mut ai = std::iter::repeat(vec![]).take(256).collect::<Vec<_>>();
-	print(format!("Running... 0.2"));
     for nodes in ai.iter_mut() {
         for _ in 0..rng.gen_range(2, 8) {
             let random: f32 = rng.gen();
-			print(format!("Running... 0.3"));
             nodes.push(Node {
                 op: if random < 0.25 {
                     Operator::Add
