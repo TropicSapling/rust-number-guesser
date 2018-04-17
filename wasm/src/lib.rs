@@ -36,7 +36,7 @@ fn print(s: String) {
 
 #[no_mangle]
 pub extern fn run() {
-	print("Running...");
+	print(format!("Running..."));
 	
     let mut rng = thread_rng();
     let mut ai = std::iter::repeat(vec![]).take(256).collect::<Vec<_>>();
