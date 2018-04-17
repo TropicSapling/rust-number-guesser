@@ -75,8 +75,6 @@ pub extern fn run() {
     for _ in 0..256 {
         let mut closest = None;
         let mut best_ai = None;
-		
-		print(format!("Running... 2"));
         
         for (i, nodes) in ai.iter().enumerate() {
             let mut res = Wrapping(rng.gen_range(-2048, 2048));
@@ -91,7 +89,7 @@ pub extern fn run() {
                 }
             }
 			
-			print(format!("Running... 3"));
+			print(format!("Running... 2"));
             
             let diff = if res > Wrapping(1337) {
                 res - Wrapping(1337)
