@@ -14,7 +14,12 @@ function print_js(s, l) {
 	console.log(str);
 }
 
-WebAssembly.instantiateStreaming(fetch('wasm/wasm.wasm'))
+WebAssembly.instantiateStreaming(fetch('wasm/wasm.wasm'), {
+	env: {
+		memory,
+		print_js: print_js
+	}
+})
 .then(wasm_module => {
 	memory = wasm_module.instance.exports.memory;
 	
