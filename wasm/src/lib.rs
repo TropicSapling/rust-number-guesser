@@ -36,6 +36,8 @@ fn print(s: String) {
 
 #[no_mangle]
 pub extern fn run() {
+	print("Running...");
+	
     let mut rng = thread_rng();
     let mut ai = std::iter::repeat(vec![]).take(256).collect::<Vec<_>>();
     for nodes in ai.iter_mut() {
