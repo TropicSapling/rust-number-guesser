@@ -56,7 +56,7 @@ fn rand_range(min: isize, max: isize) -> isize {
 
 #[no_mangle]
 pub extern fn run() {
-	print(format!("Running... 0"));
+	print(format!("Running..."));
 	
 	panic::set_hook(Box::new(|info| {
         print(format!("ERROR: {}", info));
@@ -83,8 +83,6 @@ pub extern fn run() {
             });
         }
     }
-	
-	print(format!("Running... 1"));
     
     let mut best = None;
     let mut best_of_the_best = 0;
@@ -104,14 +102,14 @@ pub extern fn run() {
                     }
                 }
             }
-			
-			print(format!("Running... 2"));
             
             let diff = if res > Wrapping(1337) {
                 res - Wrapping(1337)
             } else {
                 Wrapping(1337) - res
             };
+			
+			print(format!("[DEBUG] 0")); // DEBUG
             
             match closest {
                 None => {
@@ -134,12 +132,15 @@ pub extern fn run() {
         }
         
         print(format!("Output: {}", closest.unwrap()));
+		print(format!("[DEBUG] 1")); // DEBUG
         
         let mut i = 0;
         while i < ai.len() {
             if i != best_ai.unwrap() {
                 let mut j = 0;
+				print(format!("[DEBUG] 2")); // DEBUG
                 while j < ai[i].len() {
+					print(format!("[DEBUG] 3")); // DEBUG
                     if rand() < ai[i][j].mut_rate {
                         let best = ai[best_ai.unwrap()].clone();
                         let random = rand_range(0, best.len() as isize) as usize;
