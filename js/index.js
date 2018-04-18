@@ -20,7 +20,7 @@ WebAssembly.instantiateStreaming(fetch('wasm/wasm.wasm'), {
 		print_js: print_js,
 		rand_js: () => Math.random(),
 		rand_bool_js: () => Math.round(Math.random()),
-		rand_range_js: (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
+		rand_range_js: (min, max) => Math.floor(Math.random() * (max - min) + min)
 	}
 })
 .then(wasm_module => {

@@ -108,8 +108,6 @@ pub extern fn run() {
             } else {
                 Wrapping(1337) - res
             };
-			
-			print(format!("[DEBUG] 0")); // DEBUG
             
             match closest {
                 None => {
@@ -132,20 +130,15 @@ pub extern fn run() {
         }
         
         print(format!("Output: {}", closest.unwrap()));
-		print(format!("[DEBUG] 1")); // DEBUG
         
         let mut i = 0;
         while i < ai.len() {
             if i != best_ai.unwrap() {
                 let mut j = 0;
-				print(format!("[DEBUG] 2")); // DEBUG
                 while j < ai[i].len() {
-					print(format!("[DEBUG] 3")); // DEBUG
                     if rand() < ai[i][j].mut_rate {
-						print(format!("[DEBUG] 4")); // DEBUG
                         let best = ai[best_ai.unwrap()].clone();
                         let random = rand_range(0, best.len() as isize) as usize;
-                        print(format!("[DEBUG] 5")); // DEBUG
                         ai[i][j] = best[random];
                         
                         if j < best.len() {
