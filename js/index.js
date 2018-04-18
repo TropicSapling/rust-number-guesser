@@ -17,7 +17,10 @@ function print_js(s, l) {
 WebAssembly.instantiateStreaming(fetch('wasm/wasm.wasm'), {
 	env: {
 		memory,
-		print_js: print_js
+		print_js: print_js,
+		rand_js: () => Math.random(),
+		rand_bool_js: () => Math.round(Math.random()),
+		rand_range_js: (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 	}
 })
 .then(wasm_module => {

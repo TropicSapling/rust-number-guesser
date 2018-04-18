@@ -1,7 +1,3 @@
-extern crate rand;
-
-use rand::{Rng, thread_rng};
-
 use std::{
 	num::Wrapping,
 	ffi::CString,
@@ -12,9 +8,9 @@ use std::{
 #[derive(Debug, Clone, Copy)]
 struct Node {
     op: Operator,
-    val: Wrapping<i64>,
-    mut_rate: f32,
-    mut_rate2: f32
+    val: Wrapping<isize>,
+    mut_rate: f64,
+    mut_rate2: f64
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -27,6 +23,9 @@ enum Operator {
 
 extern {
 	fn print_js(s: *mut c_char, l: usize);
+	fn rand_js() -> f64;
+	fn rand_bool_js() -> bool;
+	fn rand_range_js(min: isize, max: isize) -> isize;
 }
 
 fn print(s: String) {
@@ -34,6 +33,24 @@ fn print(s: String) {
 	
 	unsafe {
 		print_js(CString::new(s).unwrap().into_raw(), length);
+	}
+}
+
+fn rand() -> f64 {
+	unsafe {
+		rand_js()
+	}
+}
+
+fn rand_bool() -> bool {
+	unsafe {
+		rand_bool_js()
+	}
+}
+
+fn rand_range(min: isize, max: isize) -> isize {
+	unsafe {
+		rand_range_js(min, max)
 	}
 }
 
@@ -45,11 +62,10 @@ pub extern fn run() {
         print(format!("ERROR: {}", info));
     }));
 	
-    let mut rng = thread_rng(); // CRASH
     let mut ai = std::iter::repeat(vec![]).take(256).collect::<Vec<_>>();
     for nodes in ai.iter_mut() {
-        for _ in 0..rng.gen_range(2, 8) {
-            let random: f32 = rng.gen();
+        for _ in 0..rand_range(2, 8) {
+            let random = rand();
             nodes.push(Node {
                 op: if random < 0.25 {
                     Operator::Add
@@ -61,9 +77,9 @@ pub extern fn run() {
                     Operator::Div
                 },
                 
-                val: Wrapping(rng.gen_range(-2048, 2048)),
-                mut_rate: rng.gen(),
-                mut_rate2: rng.gen()
+                val: Wrapping(rand_range(-2048, 2048)),
+                mut_rate: rand(),
+                mut_rate2: rand()
             });
         }
     }
@@ -77,7 +93,7 @@ pub extern fn run() {
         let mut best_ai = None;
         
         for (i, nodes) in ai.iter().enumerate() {
-            let mut res = Wrapping(rng.gen_range(-2048, 2048));
+            let mut res = Wrapping(rand_range(-2048, 2048));
             for node in nodes.iter() {
                 match node.op {
                     Operator::Add => res += node.val,
@@ -124,14 +140,14 @@ pub extern fn run() {
             if i != best_ai.unwrap() {
                 let mut j = 0;
                 while j < ai[i].len() {
-                    if rng.gen::<f32>() < ai[i][j].mut_rate {
+                    if rand() < ai[i][j].mut_rate {
                         let best = ai[best_ai.unwrap()].clone();
-                        let random = rng.gen_range(0, best.len());
+                        let random = rand_range(0, best.len() as isize) as usize;
                         
                         ai[i][j] = best[random];
                         
                         if j < best.len() {
-                            let random: f32 = rng.gen();
+                            let random = rand();
                             ai[i].push(Node {
                                 op: if random < 0.25 {
                                     Operator::Add
@@ -143,15 +159,15 @@ pub extern fn run() {
                                     Operator::Div
                                 },
                                 
-                                val: Wrapping(rng.gen_range(-2048, 2048)),
-                                mut_rate: rng.gen(),
-                                mut_rate2: rng.gen()
+                                val: Wrapping(rand_range(-2048, 2048)),
+                                mut_rate: rand(),
+                                mut_rate2: rand()
                             });
                         } else if j > 0 {
                             ai[i].pop();
                         }
-                    } else if rng.gen::<f32>() < ai[i][j].mut_rate2 {
-                        let random: f32 = rng.gen();
+                    } else if rand() < ai[i][j].mut_rate2 {
+                        let random = rand();
                         ai[i][j].op = if random < 0.25 {
                             Operator::Add
                         } else if random < 0.5 {
@@ -162,12 +178,12 @@ pub extern fn run() {
                             Operator::Div
                         };
                         
-                        ai[i][j].val = Wrapping(rng.gen_range(-2048, 2048));
-                        ai[i][j].mut_rate = rng.gen();
-                        ai[i][j].mut_rate2 = rng.gen();
+                        ai[i][j].val = Wrapping(rand_range(-2048, 2048));
+                        ai[i][j].mut_rate = rand();
+                        ai[i][j].mut_rate2 = rand();
                         
-                        if rng.gen() {
-                            let random: f32 = rng.gen();
+                        if rand_bool() {
+                            let random = rand();
                             ai[i].push(Node {
                                 op: if random < 0.25 {
                                     Operator::Add
@@ -179,9 +195,9 @@ pub extern fn run() {
                                     Operator::Div
                                 },
                                 
-                                val: Wrapping(rng.gen_range(-2048, 2048)),
-                                mut_rate: rng.gen(),
-                                mut_rate2: rng.gen()
+                                val: Wrapping(rand_range(-2048, 2048)),
+                                mut_rate: rand(),
+                                mut_rate2: rand()
                             });
                         } else if j > 0 {
                             ai[i].pop();
@@ -200,7 +216,7 @@ pub extern fn run() {
     
     print(format!("\nFinal Output: {}", best.unwrap()));
     
-    let mut res = Wrapping(rng.gen_range(-2048, 2048));
+    let mut res = Wrapping(rand_range(-2048, 2048));
     for node in ai[best_of_the_best].iter() {
         match node.op {
             Operator::Add => {
