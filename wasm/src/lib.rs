@@ -172,7 +172,7 @@ pub extern fn run() {
                         } else {
                             Operator::Div
                         };
-                        print(format!("[DEBUG] 6")); // DEBUG
+                        
                         ai[i][j].val = Wrapping(rand_range(-2048, 2048));
                         ai[i][j].mut_rate = rand();
                         ai[i][j].mut_rate2 = rand();
